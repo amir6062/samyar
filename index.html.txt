@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<title>بازی فکری ششم</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  font-family: Tahoma;
+  background: linear-gradient(#667eea,#764ba2);
+  direction: rtl;
+  text-align: center;
+  color: white;
+}
+.box {
+  background: white;
+  color: black;
+  margin: 20px auto;
+  padding: 20px;
+  width: 90%;
+  border-radius: 15px;
+}
+button {
+  padding: 12px 20px;
+  margin: 8px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: none;
+}
+.correct { background: #4CAF50; color: white; }
+.wrong { background: #F44336; color: white; }
+.hide { display:none; }
+</style>
+</head>
+
+<body>
+
+<h1>🎮 بازی فکری پایه ششم</h1>
+<h3>سازنده: سامیار دهقانی</h3>
+
+<div class="box" id="startBox">
+<p>نام خود را وارد کنید:</p>
+<input id="player" placeholder="اسم بازیکن">
+<br><br>
+<button onclick="startGame()">شروع بازی 🚀</button>
+</div>
+
+<div class="box hide" id="gameBox">
+<h2>👤 بازیکن: <span id="playerName"></span></h2>
+<h3>⭐ امتیاز: <span id="score">0</span></h3>
+<h3>⏱ زمان: <span id="time">60</span></h3>
+<h2 id="qText"></h2>
+<div id="answers"></div>
+</div>
+
+<div class="box hide" id="endBox">
+<h2>🏆 پایان بازی</h2>
+<h3>امتیاز نهایی: <span id="finalScore"></span></h3>
+<button onclick="location.reload()">🔄 بازی دوباره</button>
+</div>
+
+<audio id="correctSound">
+<source src="https://cdn.pixabay.com/audio/2022/03/15/audio_0f7d2c7ef5.mp3">
+</audio>
+
+<audio id="wrongSound">
+<source src="https://cdn.pixabay.com/audio/2022/03/10/audio_7c0e8b29c6.mp3">
+</audio>
+
+<script>
+let score=0,time=60,qIndex=0,timer;
+const questions=[
+{q:"حاصل 9×7؟",a:["63","56","72"],c:0},
+{q:"مخالف «قوی»؟",a:["نیرومند","ضعیف","محکم"],c:1},
+{q:"کدام حالت ماده است؟",a:["نور","جامد","صدا"],c:1},
+{q:"جمع 125 و 75؟",a:["150","200","175"],c:1},
+{q:"هم‌معنی «دانش»؟",a:["علم","نادانی","ترس"],c:0}
+];
+
+function startGame(){
+let name=document.getElementById("player").value;
+if(name===""){alert("اسم را وارد کن");return;}
+document.getElementById("playerName").innerText=name;
+document.getElementById("startBox").classList.add("hide");
+document.getElementById("gameBox").classList.remove("hide");
+showQ();
+timer=setInterval(()=>{
+time--;
+document.getElementById("time").innerText=time;
+if(time<=0) endGame();
+},1000);
+}
+
+function showQ(){
+if(qIndex>=questions.length){endGame();return;}
+let q=questions[qIndex];
+document.getElementById("qText").innerText=q.q;
+let ans="";
+q.a.forEach((x,i)=>{
+ans+=`<button onclick="check(${i})">${x}</button>`;
+});
+document.getElementById("answers").innerHTML=ans;
+}
+
+function check(i){
+let q=questions[qIndex];
+if(i===q.c){
+score+=10;
+document.getElementById("correctSound").play();
+}else{
+document.getElementById("wrongSound").play();
+}
+document.getElementById("score").innerText=score;
+qIndex++;
+showQ();
+}
+
+function endGame(){
+clearInterval(timer);
+document.getElementById("gameBox").classList.add("hide");
+document.getElementById("endBox").classList.remove("hide");
+document.getElementById("finalScore").innerText=score;
+}
+</script>
+
+</body>
+</html>
